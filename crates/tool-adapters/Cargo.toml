@@ -1,0 +1,55 @@
+[package]
+name = "agent-tool-adapters"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[lib]
+name = "agent_tool_adapters"
+path = "src/lib.rs"
+
+[features]
+default = [
+    "shell",
+    "file",
+    "http",
+]
+
+shell = []
+file = []
+http = ["dep:reqwest"]
+
+# V0.1 可以先留接口，不急着真正实现
+mcp = []
+
+[dependencies]
+# Agent Runtime 核心抽象
+agent-runtime.workspace = true
+
+# Async
+async-trait.workspace = true
+tokio.workspace = true
+
+# Serialization
+serde.workspace = true
+serde_json.workspace = true
+
+# Error
+thiserror.workspace = true
+anyhow.workspace = true
+
+# Logging
+tracing.workspace = true
+
+# HTTP Tool
+reqwest = {
+    workspace = true,
+    optional = true
+}
+
+# Linux / Process
+nix.workspace = true
+
+[lints]
+workspace = true

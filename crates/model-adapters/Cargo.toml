@@ -1,0 +1,48 @@
+[package]
+name = "agent-model-adapters"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[lib]
+name = "agent_model_adapters"
+path = "src/lib.rs"
+
+[features]
+default = [
+    "openai",
+    "qwen",
+    "ollama",
+    "vllm",
+]
+
+openai = []
+qwen = []
+ollama = []
+vllm = []
+
+[dependencies]
+# Agent Runtime 核心抽象
+agent-runtime.workspace = true
+
+# Async
+async-trait.workspace = true
+tokio.workspace = true
+
+# HTTP
+reqwest.workspace = true
+
+# Serialization
+serde.workspace = true
+serde_json.workspace = true
+
+# Error
+thiserror.workspace = true
+anyhow.workspace = true
+
+# Logging / Trace
+tracing.workspace = true
+
+[lints]
+workspace = true
