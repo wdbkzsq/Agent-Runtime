@@ -1,5 +1,3 @@
-use std::process::Child;
-
 #[derive(Debug, Clone, PartialEq)]
 pub enum AgentState {
     CREATED,
@@ -21,15 +19,15 @@ impl AgentInstance {
         Self {
             id: id.to_string(),
             agent_type: agent_type.to_string(),
-            state: AgentState.CREATED,
+            state: AgentState::CREATED,
             pid: None,
         }
     }
     pub fn set_running(&mut self, pid: u32) {
         self.pid = Some(pid);
-        self.state = AgentState.RUNNING;
+        self.state = AgentState::RUNNING;
     }
     pub fn complete(&mut self) {
-        self.state = AgentState.COMPLETED;
+        self.state = AgentState::COMPLETED;
     }
 }

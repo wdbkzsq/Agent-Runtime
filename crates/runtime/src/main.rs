@@ -1,23 +1,39 @@
+mod agent;
+mod executor;
+mod graph;
 mod scheduler;
 mod task;
+mod worker;
 
+use agent::*;
+use executor::*;
+use graph::*;
 use scheduler::*;
+use std::env;
 use task::*;
 
 fn main() {
-    println!("=== Agent Runtime Day1 ===");
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() > 1 && args[1] == "worker" {
+        worker::run(args[2].clone());
+        return;
+    }
+    println!("=== Agent Runtime Day2 ===");
     let mut scheduler = Scheduler::new();
-
-    let task_a = Task::new("task_a", "research-agent", 10);
-    scheduler.submit(task_a);
-    let mut task_b = Task::new("task_b", "coding-agent", 5);
-    task_b.add_dependency("task_a");
-    scheduler.submit(task_b);
-
-    println!("\nReady Queue size = {}", scheduler.queue_size());
-
-    let running = scheduler.fetch_next().unwrap();
-
-    println!("Execute {}", running);
-    scheduler.finish(&running);
+    let task = Task::new("task-A", "research-agent", 10);
+    scheduler.submit(task);
+    let task = scheduler.fetch_next().unwrap();
+    println!("[Runtime] dispatch {}", task.id);
+    let mut agent = AgentInstance::new("agent-001", &task.agent_type);
+    println!("[Runtime] create {:?}", agent.state);
+    let mut child = Executor::new().execute(&mut agent);
+    let status = child.wait().unwrap();
+    if status.success() {
+        agent.complete();
+        println!("[Runtime] Agent {} COMPLETED", agent.id);
+        scheduler.finish(&task);
+    } else {
+        println!("[Runtime] Agent FAILED");
+    }
 }
